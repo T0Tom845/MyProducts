@@ -11,16 +11,19 @@ import ru.totom.myproducts.entity.Product;
 import ru.totom.myproducts.service.ProductService;
 
 @RestController
-@RequestMapping("products/{productName}")
+@RequestMapping("products/{productId}")
 @RequiredArgsConstructor
 public class ProductController {
+
     private final ProductService productService;
+
     @GetMapping
-    public Product getProduct(@PathVariable String productName) {
-        return productService.getProduct(productName);
+    public Product getProduct(@PathVariable Integer productId) {
+        return productService.getProduct(productId);
     }
+
     @PatchMapping
-    public ResponseEntity<?> updateProduct(@PathVariable String productName,
+    public ResponseEntity<?> updateProduct(@PathVariable Integer productId,
                                  @RequestBody @Valid UpdateProductPayload payload,
                                  BindingResult bindingResult) throws BindException {
         if (bindingResult.hasErrors()) {
@@ -30,14 +33,15 @@ public class ProductController {
                 throw new BindException(bindingResult);
             }
         }else{
-            this.productService.updateProduct(productName, payload);
+            this.productService.updateProduct(productId, payload);
             return ResponseEntity.noContent().build();
         }
     }
-    @DeleteMapping
-    public ResponseEntity<?> deleteProduct(@PathVariable String productName) {
-        this.productService.deleteProduct(productName);
-        return ResponseEntity.noContent().build();
 
+    @DeleteMapping
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer productId) {
+        this.productService.deleteProduct(productId);
+        return ResponseEntity.noContent().build();
     }
+
 }

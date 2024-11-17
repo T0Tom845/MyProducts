@@ -11,6 +11,7 @@ import ru.totom.myproducts.controller.payload.NewProductPayload;
 import ru.totom.myproducts.entity.Product;
 import ru.totom.myproducts.service.ProductService;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class ProductsController {
     private final ProductService productService;
 
     @GetMapping
-    public List<Product> getProducts() {
+    public Iterable<Product> getProducts() {
         return productService.getProducts();
     }
     @PostMapping
