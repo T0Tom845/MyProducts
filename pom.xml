@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.totom</groupId>
     <artifactId>MyProducts</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <name>MyProducts</name>
     <description>MyProducts</description>
     <url/>
