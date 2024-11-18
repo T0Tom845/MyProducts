@@ -2,6 +2,7 @@ package ru.totom.myproducts.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -23,9 +24,19 @@ public class ProductsController {
     private final ProductService productService;
 
     @GetMapping
-    public Iterable<Product> getProducts() {
-        return productService.getProducts();
+    public ResponseEntity<Page<Product>> getProducts( // тут можно на лист заменить
+            @RequestParam(required = false) String nameFilter,
+            @RequestParam(required = false) Double priceGreaterThan,
+            @RequestParam(required = false) Double priceLessThan,
+            @RequestParam(required = false) Boolean available,
+            @RequestParam(required = false, defaultValue = "name") String sortBy,
+            @RequestParam(required = false, defaultValue = "asc") String sortDirection,
+            @RequestParam(required = false, defaultValue = "10") int limit
+    ) {
+        Page<Product> products = productService.getProducts(nameFilter, priceGreaterThan, priceLessThan, available, sortBy, sortDirection, limit);
+        return ResponseEntity.ok(products);
     }
+
     @PostMapping
     public Product addProduct(@Valid @RequestBody NewProductPayload payload, BindingResult bindingResult, UriComponentsBuilder uriComponentsBuilder) throws BindException{
         if (bindingResult.hasErrors()){
@@ -37,7 +48,7 @@ public class ProductsController {
         }else {
             Product product = this.productService.addProduct(payload.name(), payload.description(), payload.price(), payload.available());
             return ResponseEntity.created(uriComponentsBuilder
-                            .replacePath("/catalogue-api/products/{productName}")
+                            .replacePath("/products/{productId}")
                             .build(Map.of("productName", product.getName())))
                     .body(product).getBody();
         }
