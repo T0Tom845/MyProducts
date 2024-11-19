@@ -29,7 +29,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product getProduct(Integer productId) {
+    public Product getProduct(Long productId) {
         return productRepository.findById(productId).orElseThrow();
     }
 
@@ -46,7 +46,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(Integer productId, UpdateProductPayload payload) {
+    public void updateProduct(Long productId, UpdateProductPayload payload) {
         this.productRepository.findById(productId)
                 .ifPresentOrElse(product -> {
                     product.setName(payload.name());
@@ -59,7 +59,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(Integer productId) {
+    public void deleteProduct(Long productId) {
         this.productRepository.deleteById(productId);
     }
 
