@@ -38,7 +38,9 @@ public class ProductsController {
     }
 
     @PostMapping
-    public Product addProduct(@Valid @RequestBody NewProductPayload payload, BindingResult bindingResult, UriComponentsBuilder uriComponentsBuilder) throws BindException{
+    public Product addProduct(@Valid @RequestBody NewProductPayload payload,
+                              BindingResult bindingResult,
+                              UriComponentsBuilder uriComponentsBuilder) throws BindException{
         if (bindingResult.hasErrors()){
             if (bindingResult instanceof BindException exception){
                 throw exception;
@@ -49,7 +51,7 @@ public class ProductsController {
             Product product = this.productService.addProduct(payload.name(), payload.description(), payload.price(), payload.available());
             return ResponseEntity.created(uriComponentsBuilder
                             .replacePath("/products/{productId}")
-                            .build(Map.of("productName", product.getName())))
+                            .build(Map.of("productId", product.getId())))
                     .body(product).getBody();
         }
 

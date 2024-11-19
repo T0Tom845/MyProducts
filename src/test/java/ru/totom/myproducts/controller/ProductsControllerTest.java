@@ -1,39 +1,48 @@
 package ru.totom.myproducts.controller;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.totom.myproducts.repository.ProductRepository;
 import ru.totom.myproducts.service.ProductService;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ExtendWith(MockitoExtension.class)
-class ProductsControllerTest {
-
-    @Mock
-    ProductService productService;
-
-    @InjectMocks
-    private ProductsController controller;
+public class ProductsControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
+    public void createProduct_RequestIsValid_ReturnsCreatedProduct() throws Exception {
+        // Given: Подготовка запроса
+        String productJson = """
+            {
+                "name": "Продукт",
+                "description": "Описание",
+                "price": 22.3,
+                "available": true
+            }
+        """;
+
+        // When: Вызов контроллера
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(productJson))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Продукт"))
+                .andExpect(jsonPath("$.price").value(22.3))
+                .andExpect(jsonPath("$.available").value(true));
+    }
 
 }
+

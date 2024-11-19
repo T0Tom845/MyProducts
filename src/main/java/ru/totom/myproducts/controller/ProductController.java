@@ -2,6 +2,7 @@ package ru.totom.myproducts.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -18,8 +19,8 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public Product getProduct(@PathVariable Integer productId) {
-        return productService.getProduct(productId);
+    public ResponseEntity<Product> getProduct(@PathVariable Integer productId) {
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(productService.getProduct(productId));
     }
 
     @PatchMapping
