@@ -3,6 +3,7 @@ package ru.totom.myproducts.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -34,11 +35,11 @@ public class ProductsController {
             @RequestParam(required = false, defaultValue = "10") int limit
     ) {
         Page<Product> products = productService.getProducts(nameFilter, priceGreaterThan, priceLessThan, available, sortBy, sortDirection, limit);
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(products);
     }
 
     @PostMapping
-    public Product addProduct(@Valid @RequestBody NewProductPayload payload,
+    public ResponseEntity<Product> addProduct(@Valid @RequestBody NewProductPayload payload,
                               BindingResult bindingResult,
                               UriComponentsBuilder uriComponentsBuilder) throws BindException{
         if (bindingResult.hasErrors()){
@@ -52,7 +53,8 @@ public class ProductsController {
             return ResponseEntity.created(uriComponentsBuilder
                             .replacePath("/products/{productId}")
                             .build(Map.of("productId", product.getId())))
-                    .body(product).getBody();
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(product);
         }
 
     }
