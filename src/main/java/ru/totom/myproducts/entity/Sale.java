@@ -27,5 +27,4 @@ public class Sale {
     @Min(1)
     private int quantity;
 
-    // Getters and setters
 }

@@ -1,6 +1,7 @@
 package ru.totom.myproducts.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.totom.myproducts.controller.payload.SupplyUpdatePayload;
@@ -13,13 +14,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class SupplyService {
 
-    @Autowired
-    private SupplyRepository supplyRepository;
+    private final SupplyRepository supplyRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public Supply create(String documentName, Long productId, Integer quantity) {
@@ -47,11 +47,11 @@ public class SupplyService {
     public List<Supply> getAll() {
         return supplyRepository.findAll();
     }
-
+    @Transactional
     public boolean existsById(Long supplyId) {
         return supplyRepository.existsById(supplyId);
     }
-
+    @Transactional
     public Supply findById(Long supplyId) {
         return supplyRepository.findById(supplyId).orElseThrow(NoSuchElementException::new);
     }

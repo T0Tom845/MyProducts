@@ -2,13 +2,10 @@ package ru.totom.myproducts.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.totom.myproducts.controller.payload.SupplyUpdatePayload;
 import ru.totom.myproducts.controller.payload.UpdateSalePayload;
 import ru.totom.myproducts.entity.Product;
 import ru.totom.myproducts.entity.Sale;
-import ru.totom.myproducts.entity.Supply;
 import ru.totom.myproducts.repository.ProductRepository;
 import ru.totom.myproducts.repository.SaleRepository;
 
@@ -19,11 +16,9 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class SaleService {
 
-    @Autowired
-    private SaleRepository saleRepository;
+    private final SaleRepository saleRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public Sale create(String documentName, Long productId, Integer quantity) {
@@ -32,7 +27,7 @@ public class SaleService {
         if (product.getQuantity() < quantity) {
             throw new RuntimeException("Количество продажи не может быть больше чем количество товара");
         }
-        product.setQuantity(product.getQuantity() + quantity);
+        product.setQuantity(product.getQuantity() - quantity);
         productRepository.save(product);
         Sale sale = new Sale(null, documentName, product,quantity);
 

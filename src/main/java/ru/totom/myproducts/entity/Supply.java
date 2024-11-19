@@ -21,7 +21,7 @@ public class Supply{
     @Size(max = 255)
     private String documentName;
 
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     private Product product;
 
     @Min(1)
